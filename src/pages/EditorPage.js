@@ -167,7 +167,8 @@ const EditorPage = () => {
                     >
                         <option value="javascript">JavaScript</option>
                         <option value="python">Python</option>
-                        {/* Future support: <option value="cpp">C++</option> <option value="java">Java</option> */}
+                        <option value="cpp">C++</option>
+                        <option value="java">Java</option>
                     </select>
                     <button 
                         className="runBtn" 

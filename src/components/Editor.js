@@ -4,6 +4,7 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/dracula.css';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/python/python';
+import 'codemirror/mode/clike/clike';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 import ACTIONS from '../Actions';
@@ -41,8 +42,16 @@ const Editor = ({ socketRef, roomId, onCodeChange, language }) => {
     // Handle language change
     useEffect(() => {
         if (editorRef.current) {
-            const mode = language === 'python' ? 'python' : { name: 'javascript', json: true };
-            editorRef.current.setOption('mode', mode);
+            let mode = 'javascript';
+            if (language === 'python') mode = 'python';
+            else if (language === 'cpp') mode = 'text/x-c++src';
+            else if (language === 'java') mode = 'text/x-java';
+            
+            if (language === 'javascript') {
+                 editorRef.current.setOption('mode', { name: 'javascript', json: true });
+            } else {
+                 editorRef.current.setOption('mode', mode);
+            }
         }
     }, [language]);
 
