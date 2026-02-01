@@ -3,11 +3,12 @@ import Codemirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/dracula.css';
 import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/python/python';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 import ACTIONS from '../Actions';
 
-const Editor = ({ socketRef, roomId, onCodeChange }) => {
+const Editor = ({ socketRef, roomId, onCodeChange, language }) => {
     const editorRef = useRef(null);
     useEffect(() => {
         async function init() {
@@ -36,6 +37,14 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
         }
         init();
     }, []);
+
+    // Handle language change
+    useEffect(() => {
+        if (editorRef.current) {
+            const mode = language === 'python' ? 'python' : { name: 'javascript', json: true };
+            editorRef.current.setOption('mode', mode);
+        }
+    }, [language]);
 
     useEffect(() => {
         if (socketRef.current) {

@@ -4,6 +4,7 @@ const http = require('http');
 const path = require('path');
 const { Server } = require('socket.io');
 const ACTIONS = require('./src/Actions');
+const compilerService = require('./src/CompilerService');
 
 const server = http.createServer(app);
 const io = new Server(server);
@@ -48,6 +49,24 @@ io.on('connection', (socket) => {
 
     socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {
         io.to(socketId).emit(ACTIONS.CODE_CHANGE, { code });
+    });
+
+    socket.on(ACTIONS.RUN_CODE, async ({ roomId, language, code }) => {
+        console.log(`[RUN_CODE] Language: ${language}, Code Length: ${code?.length}`);
+        console.log(`[RUN_CODE] Snippet: ${code?.substring(0, 50)}...`);
+        try {
+            const result = await compilerService.execute(language, code);
+            // Broadcast to room so everyone sees the output
+            io.in(roomId).emit(ACTIONS.CODE_OUTPUT, { 
+                output: result.output || result.error,
+                isError: !!result.error 
+            });
+        } catch (err) {
+            io.in(roomId).emit(ACTIONS.CODE_OUTPUT, { 
+                output: 'Server Error: ' + err.toString(),
+                isError: true 
+            });
+        }
     });
 
     socket.on('disconnecting', () => {

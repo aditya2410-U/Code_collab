@@ -18,6 +18,10 @@ const EditorPage = () => {
     const { roomId } = useParams();
     const reactNavigator = useNavigate();
     const [clients, setClients] = useState([]);
+    const [language, setLanguage] = useState('javascript');
+    const [output, setOutput] = useState('');
+    const [isRunning, setIsRunning] = useState(false);
+    const [socketInitialized, setSocketInitialized] = useState(false);
 
     useEffect(() => {
         const init = async () => {
@@ -30,6 +34,9 @@ const EditorPage = () => {
                 toast.error('Socket connection failed, try again later.');
                 reactNavigator('/');
             }
+
+            // Signal that socket is ready
+            setSocketInitialized(true);
 
             socketRef.current.emit(ACTIONS.JOIN, {
                 roomId,
@@ -64,12 +71,26 @@ const EditorPage = () => {
                     });
                 }
             );
+
+            // Listen for Code Output
+            socketRef.current.on(ACTIONS.CODE_OUTPUT, ({ output, isError }) => {
+                setOutput(output);
+                setIsRunning(false);
+                if (isError) {
+                    toast.error('Execution failed');
+                } else {
+                    toast.success('Execution successful');
+                }
+            });
         };
         init();
         return () => {
-            socketRef.current.disconnect();
-            socketRef.current.off(ACTIONS.JOINED);
-            socketRef.current.off(ACTIONS.DISCONNECTED);
+            if (socketRef.current) {
+                socketRef.current.disconnect();
+                socketRef.current.off(ACTIONS.JOINED);
+                socketRef.current.off(ACTIONS.DISCONNECTED);
+                socketRef.current.off(ACTIONS.CODE_OUTPUT);
+            }
         };
     }, []);
 
@@ -85,6 +106,24 @@ const EditorPage = () => {
 
     function leaveRoom() {
         reactNavigator('/');
+    }
+
+    function runCode() {
+        if (!codeRef.current) return;
+        
+        // Guard against HTML execution which might happen if sync fails/page weirdness
+        if (codeRef.current.trim().startsWith('<!DOCTYPE') || codeRef.current.trim().startsWith('<html')) {
+            toast.error('Error: It looks like HTML code is trying to run. Please clear the editor and try again.');
+            return;
+        }
+
+        setIsRunning(true);
+        setOutput('Running...');
+        socketRef.current.emit(ACTIONS.RUN_CODE, {
+            roomId,
+            language,
+            code: codeRef.current
+        });
     }
 
     if (!location.state) {
@@ -120,13 +159,38 @@ const EditorPage = () => {
                 </button>
             </div>
             <div className="editorWrap">
-                <Editor
+                <div className="editorHeader">
+                    <select 
+                        className="languageSelect" 
+                        value={language} 
+                        onChange={(e) => setLanguage(e.target.value)}
+                    >
+                        <option value="javascript">JavaScript</option>
+                        <option value="python">Python</option>
+                        {/* Future support: <option value="cpp">C++</option> <option value="java">Java</option> */}
+                    </select>
+                    <button 
+                        className="runBtn" 
+                        onClick={runCode}
+                        disabled={isRunning}
+                    >
+                        {isRunning ? 'Running...' : 'Run Code'}
+                    </button>
+                </div>
+                {socketInitialized && <Editor
                     socketRef={socketRef}
                     roomId={roomId}
                     onCodeChange={(code) => {
                         codeRef.current = code;
                     }}
-                />
+                    language={language}
+                />}
+                <div className="outputWindow">
+                    <div className="outputTitle">Output Console</div>
+                    <pre className={`outputContent ${output.includes('Error') ? 'error' : ''}`}>
+                        {output || 'Run code to see output here...'}
+                    </pre>
+                </div>
             </div>
         </div>
     );

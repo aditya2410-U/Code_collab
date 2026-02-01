@@ -159,7 +159,79 @@
   .downloadBtn:hover {
     background-color: #38c172;
   }
-  
+
+  /* NEW STYLES FOR COMPILER FEATURE */
+  .editorWrap {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+  }
+
+  .editorHeader {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 10px 20px;
+      gap: 15px;
+      background: #1c1e29;
+      border-bottom: 1px solid #424242;
+  }
+
+  .languageSelect {
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #424242;
+      background: #282a36;
+      color: #fff;
+      font-weight: bold;
+      outline: none;
+      cursor: pointer;
+  }
+
+  .runBtn {
+      background: #4aed88;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #000;
+  }
+
+  .runBtn:hover {
+      background: #38c172;
+  }
+
+  .outputWindow {
+      height: 200px; /* Fixed height for now, could be resizable */
+      background: #282a36;
+      color: #f8f8f2;
+      padding: 15px;
+      border-top: 1px solid #424242;
+      overflow-y: auto;
+      font-family: 'Courier New', Courier, monospace;
+  }
+
+  .outputTitle {
+      font-size: 14px;
+      color: #6272a4;
+      margin-bottom: 8px;
+  }
+
+  .outputContent {
+      white-space: pre-wrap;
+      font-size: 14px;
+  }
+
+  .error {
+      color: #ff5555;
+  }
+
+  .CodeMirror {
+      height: 100% !important; /* Take remaining space */
+      min-height: unset;
+  }
+
   .heroTextContainer {
     flex: 1; /* Takes up remaining space */
     display: flex;
@@ -175,6 +247,7 @@
     font-weight: bold;
     text-align: left;
     background: linear-gradient(45deg, #ffffff, #c1d9e4); /* Gradient color */
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     
