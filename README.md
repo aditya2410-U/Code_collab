@@ -1,4 +1,4 @@
-Live Demo:  https://code-collab-vz38.onrender.com
+Live Demo:  http://13.203.102.20:5000/
 
 # Code Sync - Realtime Collaborative Code Editor with Remote Execution
 
