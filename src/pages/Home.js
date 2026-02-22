@@ -35,7 +35,7 @@ const Home = () => {
         }
     };
     return (
-        <div className="homePageWrapper" style={{ paddingRight: "20px" }}>
+        <div className="homePageWrapper">
         <div className="heroTextContainer">
           <h1 className="heroText">
             Code.
@@ -54,9 +54,8 @@ const Home = () => {
               className="homePageLogo"
               src="/logo.png"
               alt="code-sync-logo"
-              style={{ height: "40px", width: "auto", paddingTop: '40px'}} // Adjust height to match text
             />
-            <h2 style={{ color: "black", fontSize: "42px", margin: 0 }}>
+            <h2 style={{ fontSize: "28px", margin: 0 }}>
               Code Sync
             </h2>
           </div>
@@ -80,7 +79,7 @@ const Home = () => {
               onKeyUp={handleInputEnter}
             />
             <button className="btn joinBtn" onClick={joinRoom}>
-              Join
+              Join Room
             </button>
             <span className="createInfo">
               If you don't have an invite then create &nbsp;

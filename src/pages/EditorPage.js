@@ -141,7 +141,10 @@ const EditorPage = () => {
                             alt="logo"
                         />
                     </div>
-                    <h3>Connected</h3>
+                    <div className="connectedLabel">
+                        Connected
+                        <span className="connectedCount">{clients.length}</span>
+                    </div>
                     <div className="clientsList">
                         {clients.map((client) => (
                             <Client
@@ -152,45 +155,75 @@ const EditorPage = () => {
                     </div>
                 </div>
                 <button className="btn copyBtn" onClick={copyRoomId}>
-                    Copy ROOM ID
+                    📋 Copy Room ID
                 </button>
                 <button className="btn leaveBtn" onClick={leaveRoom}>
-                    Leave
+                    Leave Room
                 </button>
             </div>
             <div className="editorWrap">
                 <div className="editorHeader">
-                    <select 
-                        className="languageSelect" 
-                        value={language} 
-                        onChange={(e) => setLanguage(e.target.value)}
-                    >
-                        <option value="javascript">JavaScript</option>
-                        <option value="python">Python</option>
-                        <option value="cpp">C++</option>
-                        <option value="java">Java</option>
-                    </select>
-                    <button 
-                        className="runBtn" 
-                        onClick={runCode}
-                        disabled={isRunning}
-                    >
-                        {isRunning ? 'Running...' : 'Run Code'}
-                    </button>
+                    <div className="editorHeaderLeft">
+                        <select 
+                            className="languageSelect" 
+                            value={language} 
+                            onChange={(e) => setLanguage(e.target.value)}
+                        >
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="cpp">C++</option>
+                            <option value="java">Java</option>
+                        </select>
+                        <button 
+                            className="runBtn" 
+                            onClick={runCode}
+                            disabled={isRunning}
+                        >
+                            {isRunning ? (
+                                <><span className="spinner"></span> Running</>
+                            ) : (
+                                <><span className="playIcon">▶</span> Run Code</>
+                            )}
+                        </button>
+                    </div>
+                    <div className="editorHeaderRight">
+                        <div className="roomInfo">
+                            Room: <span>{roomId.slice(0, 8)}...</span>
+                        </div>
+                    </div>
                 </div>
-                {socketInitialized && <Editor
-                    socketRef={socketRef}
-                    roomId={roomId}
-                    onCodeChange={(code) => {
-                        codeRef.current = code;
-                    }}
-                    language={language}
-                />}
+                <div className="editorContent">
+                    {socketInitialized && <Editor
+                        socketRef={socketRef}
+                        roomId={roomId}
+                        onCodeChange={(code) => {
+                            codeRef.current = code;
+                        }}
+                        language={language}
+                    />}
+                </div>
                 <div className="outputWindow">
-                    <div className="outputTitle">Output Console</div>
-                    <pre className={`outputContent ${output.includes('Error') ? 'error' : ''}`}>
-                        {output || 'Run code to see output here...'}
-                    </pre>
+                    <div className="outputHeader">
+                        <div className="outputTitleGroup">
+                            <span className="terminalIcon">⬤</span>
+                            <span className="outputTitle">Terminal</span>
+                        </div>
+                        <button className="clearBtn" onClick={() => setOutput('')}>
+                            Clear
+                        </button>
+                    </div>
+                    <div className="outputBody">
+                        {output ? (
+                            <pre className={`outputContent ${output.includes('Error') ? 'error' : 'success'}`}>
+                                {output}
+                            </pre>
+                        ) : (
+                            <span className="outputPlaceholder">
+                                Run your code to see output here...
+                                <span className="terminalCursor"></span>
+                            </span>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
