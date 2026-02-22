@@ -37,6 +37,23 @@ const Home = () => {
     };
     return (
         <div className="homePageWrapper">
+            {/* Animated Waves */}
+            <div className="waveContainer">
+                <div className="wave wave1"></div>
+                <div className="wave wave2"></div>
+                <div className="wave wave3"></div>
+            </div>
+
+            {/* Floating Particles */}
+            <div className="particles">
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+            </div>
+
             <motion.div 
                 className="heroTextContainer"
                 initial={{ opacity: 0, x: -60 }}

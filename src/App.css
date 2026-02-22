@@ -110,6 +110,108 @@ body {
     var(--bg-primary);
   padding-right: 80px;
   overflow: hidden;
+  position: relative;
+}
+
+/* Animated Waves */
+.waveContainer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-repeat: repeat-x;
+  animation: waveMove 8s linear infinite;
+}
+
+.wave1 {
+  background: linear-gradient(
+    to bottom,
+    transparent 60%,
+    rgba(102, 126, 234, 0.06) 80%,
+    rgba(102, 126, 234, 0.1) 100%
+  );
+  border-radius: 40% 50% 0 0;
+  height: 120px;
+  bottom: 0;
+  animation-duration: 7s;
+}
+
+.wave2 {
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(67, 233, 123, 0.05) 75%,
+    rgba(67, 233, 123, 0.08) 100%
+  );
+  border-radius: 45% 55% 0 0;
+  height: 100px;
+  bottom: 0;
+  animation-duration: 11s;
+  animation-direction: reverse;
+}
+
+.wave3 {
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    rgba(118, 75, 162, 0.04) 70%,
+    rgba(118, 75, 162, 0.07) 100%
+  );
+  border-radius: 50% 40% 0 0;
+  height: 80px;
+  bottom: 0;
+  animation-duration: 15s;
+}
+
+@keyframes waveMove {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Floating particles */
+.particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(102, 126, 234, 0.15);
+  border-radius: 50%;
+  animation: floatUp 12s linear infinite;
+}
+
+.particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 10s; }
+.particle:nth-child(2) { left: 25%; animation-delay: 2s; animation-duration: 14s; background: rgba(67, 233, 123, 0.12); }
+.particle:nth-child(3) { left: 40%; animation-delay: 4s; animation-duration: 11s; }
+.particle:nth-child(4) { left: 55%; animation-delay: 1s; animation-duration: 13s; background: rgba(118, 75, 162, 0.12); }
+.particle:nth-child(5) { left: 70%; animation-delay: 3s; animation-duration: 9s; }
+.particle:nth-child(6) { left: 85%; animation-delay: 5s; animation-duration: 12s; background: rgba(67, 233, 123, 0.12); }
+
+@keyframes floatUp {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-20px) scale(1.5); opacity: 0; }
 }
 
 .heroTextContainer {
@@ -414,22 +516,34 @@ body {
   border-left: 3px solid transparent;
 }
 
-/* ========== SPARK EFFECTS ========== */
+/* ========== PULSE WAVE EFFECTS ========== */
 .editorWrap.spark-success {
-  box-shadow: 
-    inset 0 0 60px rgba(34, 197, 94, 0.08),
-    0 0 80px rgba(34, 197, 94, 0.12);
+  animation: pulseGreen 2.5s ease forwards;
   border-left-color: var(--accent-green);
 }
 
 .editorWrap.spark-error {
-  box-shadow: 
-    inset 0 0 60px rgba(239, 68, 68, 0.08),
-    0 0 80px rgba(239, 68, 68, 0.12);
+  animation: pulseRed 2.5s ease forwards;
   border-left-color: var(--accent-red);
 }
 
-/* Spark overlay flash */
+@keyframes pulseGreen {
+  0% { background-color: var(--bg-secondary); }
+  10% { background-color: rgba(34, 197, 94, 0.06); }
+  30% { background-color: rgba(34, 197, 94, 0.12); }
+  60% { background-color: rgba(34, 197, 94, 0.04); }
+  100% { background-color: var(--bg-secondary); }
+}
+
+@keyframes pulseRed {
+  0% { background-color: var(--bg-secondary); }
+  10% { background-color: rgba(239, 68, 68, 0.06); }
+  30% { background-color: rgba(239, 68, 68, 0.12); }
+  60% { background-color: rgba(239, 68, 68, 0.04); }
+  100% { background-color: var(--bg-secondary); }
+}
+
+/* Full-screen spark overlay */
 .sparkOverlay {
   position: absolute;
   top: 0;
@@ -439,26 +553,29 @@ body {
   pointer-events: none;
   z-index: 10;
   opacity: 0;
-  transition: opacity 0.3s ease;
-  border-radius: 0;
 }
 
 .sparkOverlay.spark-success {
-  background: radial-gradient(ellipse at center, rgba(34, 197, 94, 0.06) 0%, transparent 70%);
-  opacity: 1;
-  animation: sparkFade 2.5s ease forwards;
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.15) 0%, transparent 60%),
+    radial-gradient(circle at 20% 80%, rgba(67, 233, 123, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.08) 0%, transparent 40%);
+  animation: sparkPulseWave 2.5s ease forwards;
 }
 
 .sparkOverlay.spark-error {
-  background: radial-gradient(ellipse at center, rgba(239, 68, 68, 0.06) 0%, transparent 70%);
-  opacity: 1;
-  animation: sparkFade 2.5s ease forwards;
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.15) 0%, transparent 60%),
+    radial-gradient(circle at 20% 80%, rgba(239, 68, 68, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(239, 68, 68, 0.08) 0%, transparent 40%);
+  animation: sparkPulseWave 2.5s ease forwards;
 }
 
-@keyframes sparkFade {
-  0% { opacity: 0; }
-  15% { opacity: 1; }
-  100% { opacity: 0; }
+@keyframes sparkPulseWave {
+  0% { opacity: 0; transform: scale(0.95); }
+  15% { opacity: 1; transform: scale(1); }
+  40% { opacity: 0.7; }
+  100% { opacity: 0; transform: scale(1.02); }
 }
 
 /* ============================
@@ -734,6 +851,94 @@ footer a:hover {
 
 .downloadBtn:hover {
   opacity: 0.9;
+}
+
+/* ============================
+   EMOJI RUNNER (Sidebar Mascot)
+   ============================ */
+.runner-container {
+  position: relative;
+  height: 55px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--bg-input) 0%, rgba(102, 126, 234, 0.04) 100%);
+}
+
+.runner-ground {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--border-hover), transparent);
+}
+
+.runner-emoji {
+  position: absolute;
+  bottom: 12px;
+  left: 24px;
+  font-size: 22px;
+  z-index: 2;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.runner-stars {
+  position: absolute;
+  bottom: 32px;
+  left: 48px;
+  font-size: 14px;
+  z-index: 3;
+}
+
+.runner-dizzy {
+  position: absolute;
+  bottom: 32px;
+  left: 48px;
+  font-size: 14px;
+  z-index: 3;
+}
+
+/* Obstacles */
+.runner-obstacles {
+  position: absolute;
+  bottom: 10px;
+  left: 70px;
+  right: 0;
+  height: 30px;
+  display: flex;
+  align-items: flex-end;
+  gap: 30px;
+  animation: scrollObstacles 4s linear infinite;
+}
+
+.runner-obstacles.paused {
+  animation-play-state: paused;
+}
+
+.runner-obstacles.fast {
+  animation-duration: 2s;
+}
+
+.obstacle {
+  font-size: 10px;
+  color: var(--text-muted);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.obstacle.tall {
+  font-size: 16px;
+}
+
+.obstacle.short {
+  font-size: 7px;
+}
+
+@keyframes scrollObstacles {
+  0% { transform: translateX(100px); }
+  100% { transform: translateX(-200px); }
 }
 
 /* ============================

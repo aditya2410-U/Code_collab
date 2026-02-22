@@ -4,6 +4,7 @@ import ACTIONS from '../Actions';
 import Client from '../components/Client';
 import Editor from '../components/Editor';
 import { initSocket } from '../socket';
+import EmojiRunner from '../components/EmojiRunner';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     useLocation,
@@ -159,13 +160,7 @@ const EditorPage = () => {
                 transition={{ duration: 0.5, delay: 0.1 }}
             >
                 <div className="asideInner">
-                    <div className="logo">
-                        <img
-                            className="logoImage"
-                            src="/code-sync.png"
-                            alt="logo"
-                        />
-                    </div>
+                    <EmojiRunner sparkState={sparkState} />
                     <div className="connectedLabel">
                         Connected
                         <motion.span 
